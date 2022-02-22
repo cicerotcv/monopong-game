@@ -7,30 +7,27 @@ public class Block : MonoBehaviour
 {
     SpriteRenderer sprite;
 
-    BlockType blockType;
-
-    private int durability;
+    BlockState blockState;
 
     public TextMesh durabilityText;
 
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
-        blockType = new BlockType();
-        sprite.color = blockType.color;
-
-        durability = blockType.durability;
+        blockState = new BlockState();
+        sprite.color = blockState.GetColor();
     }
 
     void Update()
     {
-        durabilityText.text = $"{durability}";
+        durabilityText.text = $"{blockState.durability}";
+        sprite.color = blockState.GetColor();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        durability--;
-        if (durability <= 0)
+        blockState.DecreaseDurability();
+        if (blockState.durability <= 0)
         {
             Destroy (gameObject);
         }

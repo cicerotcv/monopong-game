@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovimentoRaquete : MonoBehaviour
 {
     [Range(0, 15)]
-    public float velocidade = 5.0f;
+    public float velocidade = 10.0f;
 
     private Vector3 direcao;
 
@@ -29,6 +29,7 @@ public class MovimentoRaquete : MonoBehaviour
             if (gm.gameState != GameManager.GameState.GAME) return;
 
             float inputX = Input.GetAxis("Horizontal");
+            velocidade = 5 + 10 * (gm.pontos / 30);
             transform.position +=
                 new Vector3(inputX, 0, 0) * Time.deltaTime * velocidade;
 
