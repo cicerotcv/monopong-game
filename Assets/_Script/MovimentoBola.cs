@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class MovimentoBola : MonoBehaviour
 {
-    [Range(1, 15)]
-    public float velocidade = 3.0f;
+    public float velocidade = 5;
 
     private Vector3 direcao;
+
+    GameManager gm;
 
     // Start is called before the first frame update
     void Start()
     {
         float dirX = Random.Range(-5.0f, 5.0f);
-        float dirY = Random.Range(1.0f, 5.0f);
+        float dirY = Random.Range(2.0f, 5.0f);
+
         direcao = new Vector3(dirX, dirY).normalized;
+
+        gm = GameManager.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // verifica se o estado atual permite movimentação da bola
+        if (gm.gameState != GameManager.GameState.GAME) return;
+
+        transform.position += direcao * Time.deltaTime * velocidade;
+
         Vector2 posicaoViewport =
             Camera.main.WorldToViewportPoint(transform.position);
 
@@ -27,25 +36,45 @@ public class MovimentoBola : MonoBehaviour
         {
             direcao = new Vector3(-direcao.x, direcao.y);
         }
-        if (posicaoViewport.y < 0 || posicaoViewport.y > 1)
+        if (posicaoViewport.y > 1)
         {
             direcao = new Vector3(direcao.x, -direcao.y);
         }
-        transform.position += direcao * Time.deltaTime * velocidade;
+        if (posicaoViewport.y < 0)
+        {
+            Reset();
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void Reset()
     {
-        if (col.gameObject.CompareTag("Player"))
+        Vector3 playerPosition =
+            GameObject.FindGameObjectWithTag("Player").transform.position;
+        transform.position = playerPosition + new Vector3(0, 0.5f, 0);
+
+        float dirX = Random.Range(-5.0f, 5.0f);
+        float dirY = Random.Range(2.0f, 5.0f);
+
+        direcao = new Vector3(dirX, dirY).normalized;
+        gm.vidas--;
+        if (gm.vidas <= 0 && gm.gameState == GameManager.GameState.GAME)
+        {
+            gm.ChangeState(GameManager.GameState.ENDGAME);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
             float dirX = Random.Range(-5.0f, 5.0f);
             float dirY = Random.Range(1.0f, 5.0f);
-
             direcao = new Vector3(dirX, dirY).normalized;
         }
-        else if (col.gameObject.CompareTag("Bloco"))
+        else if (collision.gameObject.CompareTag("Bloco"))
         {
             direcao = new Vector3(direcao.x, -direcao.y);
+            gm.pontos++;
         }
     }
 }

@@ -9,19 +9,31 @@ public class MovimentoRaquete : MonoBehaviour
 
     private Vector3 direcao;
 
+    GameManager gm;
+
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameManager.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float inputX = Input.GetAxis("Horizontal");
+        {
+            if (gm.gameState != GameManager.GameState.GAME) return;
 
-        // transform.position += new Vector3(inputX, 0, 0);
-        // transform.position += new Vector3(inputX, 0, 0) * Time.deltaTime;
-        transform.position +=
-            new Vector3(inputX, 0, 0) * Time.deltaTime * velocidade;
+            float inputX = Input.GetAxis("Horizontal");
+            transform.position +=
+                new Vector3(inputX, 0, 0) * Time.deltaTime * velocidade;
+
+            if (
+                Input.GetKeyDown(KeyCode.Escape) &&
+                gm.gameState == GameManager.GameState.GAME
+            )
+            {
+                gm.ChangeState(GameManager.GameState.PAUSE);
+            }
+        }
     }
 }

@@ -6,21 +6,43 @@ public class BlocoSpawner : MonoBehaviour
 {
     public GameObject Block;
 
-    // Start is called before the first frame update
+    GameManager gm;
+
     void Start()
     {
-        for (int i = 0; i < 15; i++)
+        gm = GameManager.GetInstance();
+        GameManager.changeStateDelegate += BuildBlocks;
+        BuildBlocks();
+    }
+
+    void BuildBlocks()
+    {
+        if (gm.gameState == GameManager.GameState.GAME)
         {
-            for (int j = 0; j < 3; j++)
+            foreach (Transform child in transform)
             {
-                Vector3 posicao = new Vector3(-12 + 1.75f * i, 3 + 1.5f * j);
-                Instantiate(Block, posicao, Quaternion.identity, transform);
+                GameObject.Destroy(child.gameObject);
+            }
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Vector3 posicao =
+                        new Vector3(-12 + 1.75f * i, 3 + 1.5f * j);
+                    Instantiate(Block, posicao, Quaternion.identity, transform);
+                }
             }
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (
+            transform.childCount <= 0 &&
+            gm.gameState == GameManager.GameState.GAME
+        )
+        {
+            gm.ChangeState(GameManager.GameState.ENDGAME);
+        }
     }
 }
