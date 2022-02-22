@@ -6,6 +6,7 @@ public class MovimentoBola : MonoBehaviour
 {
     [Range(1, 15)]
     public float velocidade = 3.0f;
+
     private Vector3 direcao;
 
     // Start is called before the first frame update
@@ -19,7 +20,8 @@ public class MovimentoBola : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 posicaoViewport = Camera.main.WorldToViewportPoint(transform.position);
+        Vector2 posicaoViewport =
+            Camera.main.WorldToViewportPoint(transform.position);
 
         if (posicaoViewport.x < 0 || posicaoViewport.x > 1)
         {
@@ -30,6 +32,20 @@ public class MovimentoBola : MonoBehaviour
             direcao = new Vector3(direcao.x, -direcao.y);
         }
         transform.position += direcao * Time.deltaTime * velocidade;
+    }
 
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.CompareTag("Player"))
+        {
+            float dirX = Random.Range(-5.0f, 5.0f);
+            float dirY = Random.Range(1.0f, 5.0f);
+
+            direcao = new Vector3(dirX, dirY).normalized;
+        }
+        else if (col.gameObject.CompareTag("Bloco"))
+        {
+            direcao = new Vector3(direcao.x, -direcao.y);
+        }
     }
 }
