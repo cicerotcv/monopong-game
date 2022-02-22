@@ -25,6 +25,10 @@ public class MovimentoBola : MonoBehaviour
     void Update()
     {
         // verifica se o estado atual permite movimentação da bola
+        if (gm.gameState == GameManager.GameState.MENU)
+        {
+            ResetPosition();
+        }
         if (gm.gameState != GameManager.GameState.GAME) return;
 
         transform.position += direcao * Time.deltaTime * velocidade;
@@ -46,7 +50,7 @@ public class MovimentoBola : MonoBehaviour
         }
     }
 
-    private void Reset()
+    private void ResetPosition()
     {
         Vector3 playerPosition =
             GameObject.FindGameObjectWithTag("Player").transform.position;
@@ -56,6 +60,11 @@ public class MovimentoBola : MonoBehaviour
         float dirY = Random.Range(2.0f, 5.0f);
 
         direcao = new Vector3(dirX, dirY).normalized;
+    }
+
+    private void Reset()
+    {
+        ResetPosition();
         gm.vidas--;
         if (gm.vidas <= 0 && gm.gameState == GameManager.GameState.GAME)
         {

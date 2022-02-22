@@ -15,12 +15,17 @@ public class MovimentoRaquete : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance();
+        ResetPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
         {
+            if (gm.gameState == GameManager.GameState.MENU)
+            {
+                ResetPosition();
+            }
             if (gm.gameState != GameManager.GameState.GAME) return;
 
             float inputX = Input.GetAxis("Horizontal");
@@ -35,5 +40,10 @@ public class MovimentoRaquete : MonoBehaviour
                 gm.ChangeState(GameManager.GameState.PAUSE);
             }
         }
+    }
+
+    private void ResetPosition()
+    {
+        transform.position = new Vector3(0, -5, 0);
     }
 }

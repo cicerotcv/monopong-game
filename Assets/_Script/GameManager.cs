@@ -26,16 +26,21 @@ public class GameManager
 
     public void ChangeState(GameState nextState)
     {
-        if (gameState == GameState.ENDGAME && nextState == GameState.GAME)
-            Reset();
+        if (
+            (gameState == GameState.ENDGAME && nextState == GameState.GAME) ||
+            (gameState == GameState.PAUSE && nextState == GameState.MENU)
+        )
+        {
+            ResetStats();
+        }
         gameState = nextState;
         changeStateDelegate();
     }
 
-    private void Reset()
+    private void ResetStats()
     {
-        this.vidas = 3;
-        this.pontos = 0;
+        vidas = 3;
+        pontos = 0;
     }
 
     public static GameManager GetInstance()
@@ -50,8 +55,13 @@ public class GameManager
 
     private GameManager()
     {
-        this.vidas = 3;
-        this.pontos = 0;
-        this.gameState = GameState.MENU;
+        this.Setup();
+    }
+
+    private void Setup()
+    {
+        vidas = 3;
+        pontos = 0;
+        gameState = GameState.MENU;
     }
 }
