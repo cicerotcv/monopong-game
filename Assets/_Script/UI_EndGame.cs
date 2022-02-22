@@ -17,7 +17,7 @@ public class UI_EndGame : MonoBehaviour
         }
         else
         {
-            message.text = "Você foi de jacksons five!!";
+            message.text = "Você foi de base!!";
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovimentoBola : MonoBehaviour
 {
-    public float velocidade = 5;
+    public float velocidade = 6;
 
     private Vector3 direcao;
 
@@ -32,7 +32,6 @@ public class MovimentoBola : MonoBehaviour
         if (gm.gameState != GameManager.GameState.GAME) return;
 
         transform.position += direcao * Time.deltaTime * velocidade;
-
         Vector2 posicaoViewport =
             Camera.main.WorldToViewportPoint(transform.position);
 

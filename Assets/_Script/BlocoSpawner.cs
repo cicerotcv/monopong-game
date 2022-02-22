@@ -11,26 +11,23 @@ public class BlocoSpawner : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance();
-        GameManager.changeStateDelegate += BuildBlocks;
-        BuildBlocks();
+        GameManager.changeStateDelegate += RecreateBlocks;
+        RecreateBlocks();
     }
 
-    void BuildBlocks()
+    private void RecreateBlocks()
     {
-        if (gm.gameState == GameManager.GameState.GAME)
+        foreach (Transform child in transform)
         {
-            foreach (Transform child in transform)
+            GameObject.Destroy(child.gameObject);
+        }
+        for (int i = 0; i < 15; i++)
+        {
+            for (int j = 0; j < 3; j++)
             {
-                GameObject.Destroy(child.gameObject);
-            }
-            for (int i = 0; i < 15; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    Vector3 posicao =
-                        new Vector3(-12 + 1.75f * i, 3 + 1.5f * j);
-                    Instantiate(Block, posicao, Quaternion.identity, transform);
-                }
+                Vector3 posicao = new Vector3(-9f + 1.3f * i, 3 + 1.3f * j);
+
+                Instantiate(Block, posicao, Quaternion.identity, transform);
             }
         }
     }
